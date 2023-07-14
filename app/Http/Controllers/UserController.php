@@ -6,7 +6,6 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use illuminate\support\Str;
 
 class UserController extends Controller
 {
@@ -15,19 +14,29 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(request()->ajax()){
+        if (request()->ajax()) {
+
             $query = User::query();
-            return DataTables::of($query)->addColumn('action', function($item){
-                return '
-                <a href = "'.route('dashboard.user.edit', $item->id). '" class = "bg-pink-400 hover:bg-white hover:text-pink-500 text-white font-bold py-2 px-4 row shadow-lg rounded " >Edit</a>
-                <form class = "inline-block" method = "POST" action = "'.route('dashboard.user.destroy', $item).'">
-                '.method_field('delete'). csrf_field(). '
-                <button class = "bg-indigo-400 hover:bg-white hover:text-indigo-500 text-white font-bold py-2 px-4 mx-2 row shadow-lg rounded py-1.5 " type = "submit" >Delete</button>
-                </form>';
-            })
-            ->rawcolumns(['action'])
-            ->make();
+            return DataTables::of($query)
+                ->addColumn('action', function ($item) {
+                    return '
+                    <a href="' . route('dashboard.user.edit', $item->id) . '" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+                    Edit
+                    </a>
+                    <form class="inline-block" method="POST" action="' . route("dashboard.user.destroy", $item->id) . '">
+                    ' . method_field('delete') . csrf_field() . '
+
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold mx-2 py-1.5 px-3 rounded shadow-lg" type="submit">
+                        Delete
+                    </button>
+
+                    </form>
+                    ';
+                })
+                ->rawColumns(['action'])
+                ->make();
         }
+
         return view('pages.dashboard.user.index');
     }
 
@@ -68,7 +77,9 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $user->update($request->all());
+        $data = $request->all();
+
+        $user->update($data);
 
         return redirect()->route('dashboard.user.index');
     }
@@ -78,6 +89,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        
     }
 }

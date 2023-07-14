@@ -44,10 +44,10 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified', '
         'index', 'create', 'store', 'destroy'
     ]);
     Route::resource('transaction', TransactionController::class)->only([
-        'index', 'create', 'store', 'destroy'
+        'index', 'create', 'store', 'destroy','show','edit','update'
     ]);;
     Route::resource('user', UserController::class)->only([
-        'index', 'create', 'store', 'destroy'
+        'index', 'create', 'store', 'destroy','edit','update'
     ]);;
 });
 
